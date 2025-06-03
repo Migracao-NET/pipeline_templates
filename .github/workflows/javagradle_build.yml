@@ -42,8 +42,8 @@ jobs:
             -Dsonar.organization=migracao-net
             -Dsonar.projectKey=${{ github.event.repository.name }}
             -Dsonar.projectName=${{ github.event.repository.name }}
-            -Dsonar.sources=src
-            -Dsonar.tests=src/test
+            -Dsonar.sources=src/main/java
+            -Dsonar.tests=src/test/java
             -Dsonar.java.binaries=build/classes
             -Dsonar.branch.name=${{ github.ref_name }}
             -Dsonar.verbose=true
