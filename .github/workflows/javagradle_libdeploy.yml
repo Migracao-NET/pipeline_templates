@@ -16,6 +16,9 @@ jobs:
               with:
                 name: build-output
 
+            - name: Allow gradlew execution
+              run: chmod +x ./gradlew
+
             - name: Publish to GitHub Packages
               run: |
                 ./gradlew publish \
