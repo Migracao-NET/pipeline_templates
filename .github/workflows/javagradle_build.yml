@@ -28,27 +28,22 @@ jobs:
 
       - name: Run Tests
         run: ./gradlew test
-
-  #     - name: Set Sonar Project Key
-  #       if: github.ref_name == 'main'
-  #       run: echo "SONAR_PROJECT_KEY=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-  #     - name: SonarCloud Scan
-  #       if: github.ref_name == 'main'
-  #       uses: SonarSource/sonarqube-scan-action@v5
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  #       with:
-  #         args: >
-  #           -Dsonar.host.url=https://sonarcloud.io
-  #           -Dsonar.organization=migracao-net
-  #           -Dsonar.projectKey=$SONAR_PROJECT_KEY
-  #           -Dsonar.projectName=${{ github.event.repository.name }}
-  #           -Dsonar.sources=src
-  #           -Dsonar.tests=src/test
-  #           -Dsonar.java.binaries=build/classes
-  #           -Dsonar.branch.name=${{ github.ref_name }}
-  #           -Dsonar.verbose=true
+  
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.organization=migracao-net
+            -Dsonar.projectKey=${{ github.event.repository.name }}
+            -Dsonar.projectName=${{ github.event.repository.name }}
+            -Dsonar.sources=src
+            -Dsonar.tests=src/test
+            -Dsonar.java.binaries=build/classes
+            -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.verbose=true
 
   #     - name: Upload artifact
   #       if: |
@@ -60,8 +55,6 @@ jobs:
 
   # deploy:
   #   needs: build
-  #   if: |
-  #     success() && github.ref_name == 'main'
   #   runs-on: ubuntu-latest
 
   #   steps:
