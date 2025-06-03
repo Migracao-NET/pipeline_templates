@@ -48,13 +48,13 @@ jobs:
             -Dsonar.branch.name=${{ github.ref_name }}
             -Dsonar.verbose=true
 
-  #     - name: Upload artifact
-  #       if: |
-  #         success() && !cancelled()
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: build-output
-  #         path: build/libs
+      - name: Upload artifact
+        if: |
+          success() && !cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: build/libs
 
   # deploy:
   #   needs: build
