@@ -24,6 +24,6 @@ jobs:
                 ./gradlew publish \
                   -PpublishingUsername=${{ github.actor }} \
                   -PpublishingPassword=${{ secrets.GITHUB_TOKEN }} \
-                  -PpublishingRepo=https://maven.pkg.github.com/OWNER/REPO
+                  -PpublishingRepo=https://maven.pkg.github.com/${{ github.actor}}/${{ github.repository }}
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
