@@ -37,23 +37,22 @@ jobs:
             - name: Create temporary publish script
               run: |
                 cat <<EOF > publish.gradle
-                plugins {
-                    id 'maven-publish'
-                }
-
-                publishing {
-                    publications {
-                        mavenJava(MavenPublication) {
-                            from components.java
+                allprojects {
+                    apply plugin: 'maven-publish'
+                    publishing {
+                        publications {
+                            mavenJava(MavenPublication) {
+                                from components.java
+                            }
                         }
-                    }
-                    repositories {
-                        maven {
-                            name = "GitHubPackages"
-                            url = uri("https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}")
-                            credentials {
-                                username = System.getenv("GH_USERNAME")
-                                password = System.getenv("GH_TOKEN")
+                        repositories {
+                            maven {
+                                name = "GitHubPackages"
+                                url = uri("https://maven.pkg.github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}")
+                                credentials {
+                                    username = System.getenv("GH_USERNAME")
+                                    password = System.getenv("GH_TOKEN")
+                                }
                             }
                         }
                     }
