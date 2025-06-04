@@ -34,9 +34,13 @@ jobs:
                 grep "id 'maven-publish'" build.gradle || \
                 sed -i '1s/^/plugins { id "maven-publish" }\n/' build.gradle
 
-            - name: Append publishing config to build.gradle
+            - name: Create temporary publish script
               run: |
-                cat <<EOF >> build.gradle
+                cat <<EOF > publish.gradle
+                plugins {
+                    id 'maven-publish'
+                }
+
                 publishing {
                     publications {
                         mavenJava(MavenPublication) {
@@ -56,11 +60,13 @@ jobs:
                 }
                 EOF
 
-            - name: Publish to GitHub Packages
-              run: ./gradlew publish
+            - name: Publish to GitHub Packages via init script
+              run: ./gradlew publish --init-script publish.gradle
               env:
                 GH_USERNAME: ${{ github.actor }}
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
 
             # - name: Publish to GitHub Packages
