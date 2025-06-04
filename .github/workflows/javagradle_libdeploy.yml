@@ -58,8 +58,12 @@ jobs:
                         }
                     }
                 }
-                    tasks.withType(GenerateModuleMetadata).configureEach {
-                      suppressedValidationErrors.add('dependencies-without-versions')
+                gradle.projectsEvaluated {
+                    allprojects {
+                        tasks.withType(GenerateModuleMetadata).configureEach {
+                            suppressedValidationErrors.add('dependencies-without-versions')
+                        }
+                    }
                 }
                 EOF
 
