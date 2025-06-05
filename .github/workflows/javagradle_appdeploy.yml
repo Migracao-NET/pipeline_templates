@@ -1,0 +1,52 @@
+name: Deploy to Docker
+
+on:
+  workflow_dispatch:
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+       distribution: 'temurin'
+       java-version: '17'
+            
+    - name: download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: build-output
+
+    - name: Allow gradlew execution
+      run: chmod +x ./gradlew
+
+    - name: Rename jar
+      run: |
+        mv **/*.jar app.jar
+
+    - name: Generate Dockerfile
+      run: |
+        cat <<EOF > Dockerfile
+        FROM eclipse-temurin:17-jdk-alpine
+        COPY app.jar app.jar
+        ENTRYPOINT ["java", "-jar", "app.jar"]
+        EOF
+
+    - name: Login to GitHub Container Registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Build and Push Docker image
+      run: |
+        IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+        docker build -t $IMAGE_NAME .
+        docker push $IMAGE_NAME
