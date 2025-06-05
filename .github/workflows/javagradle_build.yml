@@ -32,6 +32,31 @@ jobs:
       - name: Run Tests
         run: ./gradlew test
   
+      - name: Check and Create SonarCloud Project
+        id: check_create_sonar_project
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+          -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" \
+          "https://sonarcloud.io/api/projects/search?projects=${{ github.event.repository.name }}&organization=migracao-net")
+            if [ "$response" -eq 200 ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+          echo "SonarCloud project already exists."
+            else
+          echo "exists=false" >> $GITHUB_OUTPUT
+          echo "SonarCloud project does not exist. Creating..."
+          create_response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://sonarcloud.io/api/projects/create" \
+            -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" \
+            -d "organization=migracao-net" \
+            -d "project=${{ github.event.repository.name }}" \
+            -d "name=${{ github.event.repository.name }}")
+          if [ "$create_response" -eq 200 ]; then
+            echo "SonarCloud project created successfully."
+          else
+            echo "Failed to create SonarCloud project. Response code: $create_response"
+            exit 1
+          fi
+            fi
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
