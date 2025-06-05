@@ -30,9 +30,10 @@ jobs:
     - name: Allow gradlew execution
       run: chmod +x ./gradlew
 
-    - name: Rename jar
+    - name: Move JAR to root as app.jar
       run: |
-        mv **/*.jar app.jar
+        find . -name "*.jar" -exec cp {} app.jar \;
+
 
     - name: Generate Dockerfile
       run: |
