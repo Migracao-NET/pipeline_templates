@@ -51,7 +51,10 @@ jobs:
         IMAGE_NAME=ghcr.io/$(echo "${{ github.repository_owner }}/${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]'):latest
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
-        
+
+    - name: Print secret (debug temporário)
+      run: echo "${{ secrets.AZURE_CREDENTIALS }}"
+
     - name: Azure Login
       uses: azure/login@v2
       with:
