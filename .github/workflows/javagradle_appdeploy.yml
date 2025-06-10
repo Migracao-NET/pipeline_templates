@@ -3,7 +3,7 @@ name: Deploy to Docker
 on:
   workflow_call:
     secrets:
-      SONAR_TOKEN:
+      AZURE_CREDENTIALS:
         required: true
 
 permissions:
