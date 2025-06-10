@@ -2,6 +2,9 @@ name: Deploy to Docker
 
 on:
   workflow_call:
+    secrets:
+      SONAR_TOKEN:
+        required: true
 
 permissions:
     contents: read
@@ -52,8 +55,8 @@ jobs:
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
 
-    - name: Print secret (debug temporário)
-      run: echo "${{ secrets.AZURE_CREDENTIALS }}"
+    # - name: Print secret (debug temporário)
+    #   run: echo "${{ secrets.AZURE_CREDENTIALS }}"
 
     - name: Azure Login
       uses: azure/login@v2
